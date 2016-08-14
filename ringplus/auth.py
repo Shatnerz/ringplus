@@ -20,7 +20,7 @@ class OAuthHandler(object):
         self.oauth = OAuth2Session(client_id, redirect_uri=redirect_uri)
 
     def get_authorization_url(self, **kwargs):
-        """Returns the url where a user can grant authorization."""
+        """Returns the authorization URL to redirect users"""
         response = self.oauth.authorization_url(self.AUTHORIZATION_BASE_URL,
                                                 **kwargs)
         authorization_url, state = response
