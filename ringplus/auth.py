@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import requests
-from requests_oauthlib import OAuth2Session
+from requests_oauthlib import OAuth2, OAuth2Session
 
 from bs4 import BeautifulSoup
 
@@ -64,6 +64,17 @@ class OAuthHandler(object):
         r2.raise_for_status()
 
         self.access_token = self.fetch_token(r2.url)
+
+    def get_account_id(self):
+        """Return the account id associated with the access token."""
+        raise NotImplementedError
+
+    def get_user_id(self):
+        """Return the first user id associated with the access token."""
+        raise NotImplementedError
+
+    def apply_auth(self):
+        return OAuth2(self.client_id, token=self.access_token)
 
     def _get_input_data_from_html(self, html):
         """Return the params needed to login from html."""
