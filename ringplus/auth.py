@@ -1,3 +1,5 @@
+"""OAuth2  handlers and some utility functions for RingPlus."""
+
 from __future__ import print_function
 
 import requests
@@ -33,6 +35,15 @@ class OAuthHandler(object):
             authorization_response=authorization_response,
             client_secret=self.client_secret)
         return token
+
+    def refresh_token(self):
+        """Refresh the current access token."""
+        data = {'grant_type': 'refresh_token',
+                'client_id': self.client_id,
+                'client_secret': self.client_secret,
+                'refresh_token': self.access_token['refresh_token']}
+        post = requests.post(self.TOKEN_URL, data=data)
+        self.access_token = post.json()
 
     def login(self, username, password, **kwargs):
         """Hackish method to sign into RingPlus without going to site.
