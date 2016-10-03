@@ -133,7 +133,7 @@ class Voicemail(Model):
         voicemail = cls(api)
         setattr(voicemail, '_json', json)
         for k, v in json.items():
-            if k == 'registered_on':
+            if k == 'received_on':
                     setattr(voicemail, k, iso8601.parse_date(v))
             else:
                 setattr(voicemail, k, v)
