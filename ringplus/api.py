@@ -33,6 +33,7 @@ class API(object):
         self.wait_on_rate_limit_notify = wait_on_rate_limit_notify
         self.proxy = proxy
 
+    # Accounts
     @property
     def user_accounts(self):
         """A list of accounts belonging to a specific user."""
@@ -45,7 +46,6 @@ class API(object):
                            'device_esn', 'device_iccid', 'page',
                            'per_page'])
 
-    # Accounts
     @property
     def accounts(self):
         """List all accounts the user has access to."""
@@ -136,12 +136,20 @@ class API(object):
     @property
     def get_user(self):
         """Return a specific user's details."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/users/{user_id}',
+            payload_type='user')
 
     @property
     def users(self):
         """Return all Users you have access to."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/users',
+            payload_type='user',
+            payload_list=True,
+            allowed_param=['email_address', 'per_page', 'page'])
 
     @property
     def update_user(self):
