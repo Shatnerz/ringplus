@@ -120,17 +120,34 @@ class API(object):
     @property
     def calls(self):
         """Returns an account's paged phone call details."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}/phone_calls',
+            payload_type='call',
+            payload_list=True,
+            allowed_param=['start_date, end_date, per_page, page'])
 
     # Phone Texts
+    @property
     def texts(self):
         """Returns an account's paged phone text details."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}/phone_texts',
+            payload_type='text',
+            payload_list=True,
+            allowed_param=['start_date', 'end_date', 'per_page', 'page'])
 
     # Phone Data
+    @property
     def data(self):
         """Return an account's paged phone data details."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}/phone_data',
+            payload_type='data',
+            payload_list=True,
+            allowed_param=['start_date', 'end_date', 'per_page', 'page'])
 
     # Users
     @property

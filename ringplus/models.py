@@ -175,6 +175,89 @@ class User(Model):
         return results
 
 
+# Calls, Texts, and Data
+
+class Call(Model):
+    """Phone Call Model."""
+
+    @classmethod
+    def parse(cls, api, json):
+        call = cls(api)
+        setattr(call, '_json', json)
+        for k, v in json.items():
+            if k == 'start_time':
+                setattr(call, k, iso8601.parse_date(v))
+            else:
+                setattr(call, k, v)
+        return call
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['phone_calls']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
+class Text(Model):
+    """Phone Text Model."""
+
+    @classmethod
+    def parse(cls, api, json):
+        text = cls(api)
+        setattr(text, '_json', json)
+        for k, v in json.items():
+            if k == 'occurred_at':
+                setattr(text, k, iso8601.parse_date(v))
+            else:
+                setattr(text, k, v)
+        return text
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['phone_texts']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
+class Data(Model):
+    """Phone Data Model."""
+
+    @classmethod
+    def parse(cls, api, json):
+        data = cls(api)
+        setattr(data, '_json', json)
+        for k, v in json.items():
+            if k == 'occurred_at':
+                setattr(data, k, iso8601.parse_date(v))
+            else:
+                setattr(data, k, v)
+        return data
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['phone_data']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
 # Voicemail Classes
 
 class Voicemail(Model):
@@ -244,6 +327,13 @@ class ModelFactory(object):
     user = User
     account = Account
     voicemail = Voicemail
+    call = Call
+    text = Text
+    data = Data
+
+    voicemailbox = VoicemailBox
+    active_device = ActiveDevice
+    account_service = AccountService
 
     json = JSONModel
     id = IDModel
