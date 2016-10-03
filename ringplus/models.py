@@ -93,7 +93,10 @@ class User(Model):
         user = cls(api)
         setattr(user, '_json', json)
         for k, v in json.items():
-            setattr(user, k, v)
+            if k == 'accounts':
+                setattr(user, k, Account.parse_list(api, v))
+            else:
+                setattr(user, k, v)
         return user
 
     @classmethod
