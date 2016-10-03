@@ -107,3 +107,33 @@ class User(Model):
         for obj in item_list:
             results.append(cls.parse(api, obj))
         return results
+
+
+class JSONModel(Model):
+
+    @classmethod
+    def parse(cls, api, json):
+        return json
+
+
+class IDModel(Model):
+
+    @classmethod
+    def parse(cls, api, json):
+        if isinstance(json, list):
+            return json
+        else:
+            return json['ids']
+
+
+class ModelFactory(object):
+    """Used by parsers for creating instances of models.
+
+    You may subclass this factory to add your own extended models.
+    """
+
+    user = User
+    account = Account
+
+    json = JSONModel
+    id = IDModel

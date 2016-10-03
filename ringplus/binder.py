@@ -5,7 +5,7 @@ import re
 import requests
 import time
 
-from six.moves.urllip.parse import quote
+from six.moves.urllib.parse import quote
 
 from ringplus.utils import convert_to_utf8_str
 from ringplus.error import RingPlusError, RateLimitError
@@ -36,12 +36,17 @@ def bind_api(**config):
 
             self.post_data = kwargs.pop('post_data', None)
             self.retry_count = kwargs.pop('retry_count', api.retry_count)
+
+            self.retry_delay = kwargs.pop('retry_delay', api.retry_delay)
+            self.retry_errors = kwargs.pop('retry_errors', api.retry_errors)
+            self.wait_on_rate_limit = kwargs.pop('wait_on_rate_limit',
+                                                 api.wait_on_rate_limit)
+            self.wait_on_rate_limit_notify = kwargs.pop(
+                'wait_on_rate_limit_notify', api.wait_on_rate_limit_notify)
+
             self.parser = kwargs.pop('parser', api.parser)
             self.session.headers = kwargs.pop('headers', {})
             self.build_parameters(args, kwargs)
-
-            # Pick correct URL root to use
-            self.api_root = api.api_root
 
             # Perform any path variable substitution
             self.build_path()
@@ -79,11 +84,11 @@ def bind_api(**config):
                 name = variable.strip('{}')
 
                 if name == 'account_id' and \
-                           'account_id' not in self.params and \
+                           'account_id' not in self.session.params and \
                            self.api.auth:
                     value = self.api.auth.get_account_id()
                 elif name == 'user_id' and \
-                             'user_id' not in self.params and \
+                             'user_id' not in self.session.params and \
                              self.api.auth:
                     value = self.api.get_user_id()
                 else:
@@ -100,12 +105,12 @@ def bind_api(**config):
             self.api.cached_result = False
 
             # Build the request URL
-            url = self.api_root + self.path
+            url = self.path
             full_url = 'https://' + self.host + url
 
             # Query the cache if on is available
             # and this use a GET method.
-            if self.use_cache and self.api_cache and self.method == 'GET':
+            if self.use_cache and self.api.cache and self.method == 'GET':
                 cache_result = self.api.cache.get(url)
                 # if cache result found and not expired, return it
                 if cache_result:
@@ -117,7 +122,7 @@ def bind_api(**config):
                     else:
                         if isinstance(cache_result, Model):
                             cache_result._api = self.api
-                    self.api_cached_result = True
+                    self.api.cached_result = True
                     return cache_result
 
             # Continue attempting request until successful
