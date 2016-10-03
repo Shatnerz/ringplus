@@ -3,6 +3,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import iso8601
+
 
 # Result set probably really isnt needed for ringplus
 class ResultSet(list):
@@ -72,7 +74,10 @@ class Account(Model):
             account = cls(api)
             setattr(account, '_json', json)
             for k, v in json.items():
-                setattr(account, k, v)
+                if k == 'registered_on':
+                    setattr(account, k, iso8601.parse_date(v))
+                else:
+                    setattr(account, k, v)
         return account
 
     @classmethod
@@ -101,6 +106,8 @@ class User(Model):
             for k, v in json.items():
                 if k == 'accounts':
                     setattr(user, k, Account.parse_list(api, v))
+                elif k == 'registered_on':
+                    setattr(user, k, iso8601.parse_date(v))
                 else:
                     setattr(user, k, v)
         return user
@@ -126,7 +133,10 @@ class Voicemail(Model):
         voicemail = cls(api)
         setattr(voicemail, '_json', json)
         for k, v in json.items():
-            setattr(voicemail, k, v)
+            if k == 'registered_on':
+                    setattr(voicemail, k, iso8601.parse_date(v))
+            else:
+                setattr(voicemail, k, v)
         return voicemail
 
     @classmethod
