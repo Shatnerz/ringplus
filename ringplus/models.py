@@ -5,8 +5,9 @@ from __future__ import print_function
 
 import iso8601
 
+from ringplus.error import RingPlusError
 
-# Result set probably really isnt needed for ringplus
+
 class ResultSet(list):
     """A list like object that holds results from a RingPlus API query."""
     def __init__(self, max_id=None, since_id=None):
@@ -63,6 +64,8 @@ class Model(object):
         raise NotImplementedError
 
 
+# Account Classes
+
 class Account(Model):
     """Object that encapsulates a mobile device on a plan."""
 
@@ -76,6 +79,12 @@ class Account(Model):
             for k, v in json.items():
                 if k == 'registered_on':
                     setattr(account, k, iso8601.parse_date(v))
+                elif k == 'account_services':
+                    setattr(account, k, AccountService.parse_list(api, v))
+                elif k == 'active_device':
+                    setattr(account, k, ActiveDevice.parse(api, v))
+                elif k == 'voicemail_box':
+                    setattr(account, k, VoicemailBox.parse(api, v))
                 else:
                     setattr(account, k, v)
         return account
@@ -92,6 +101,47 @@ class Account(Model):
             results.append(cls.parse(api, obj))
         return results
 
+
+class AccountService(Model):
+    """Account Service Object."""
+
+    @classmethod
+    def parse(cls, api, json):
+        service = cls(api)
+        setattr(service, '_json', json)
+        for k, v in json.items():
+            setattr(service, k, v)
+        return service
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            raise RingPlusError("Cannot parse list: %s" % json_list)
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
+class ActiveDevice(Model):
+    """Active Device Object."""
+
+    @classmethod
+    def parse(cls, api, json):
+        device = cls(api)
+        setattr(device, '_json', json)
+        for k, v in json.items():
+            if k == 'registered_on':
+                setattr(device, k, iso8601.parse_date(v))
+            else:
+                setattr(device, k, v)
+        return device
+
+
+# User Classes
 
 class User(Model):
     """Base object for a user on the system."""
@@ -125,6 +175,8 @@ class User(Model):
         return results
 
 
+# Voicemail Classes
+
 class Voicemail(Model):
     """Voicemail object."""
 
@@ -151,6 +203,20 @@ class Voicemail(Model):
             results.append(cls.parse(api, obj))
         return results
 
+
+class VoicemailBox(Model):
+    """Voicemail Box Object."""
+
+    @classmethod
+    def parse(cls, api, json):
+        mailbox = cls(api)
+        setattr(mailbox, '_json', json)
+        for k, v in json.items():
+            setattr(mailbox, k, v)
+        return mailbox
+
+
+# Utility Classes
 
 class JSONModel(Model):
 
