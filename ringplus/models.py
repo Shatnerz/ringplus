@@ -69,7 +69,10 @@ class Account(Model):
         account = cls(api)
         setattr(account, '_json', json)
         for k, v in json.items():
-            setattr(account, k, v)
+            if k == 'account':
+                account = Account.parse(api, v)
+            else:
+                setattr(account, k, v)
         return account
 
     @classmethod
@@ -112,6 +115,30 @@ class User(Model):
         return results
 
 
+class Voicemail(Model):
+    """Voicemail object."""
+
+    @classmethod
+    def parse(cls, api, json):
+        voicemail = cls(api)
+        setattr(voicemail, '_json', json)
+        for k, v in json.items():
+            setattr(voicemail, k, v)
+        return voicemail
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['voicemail_messages']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
 class JSONModel(Model):
 
     @classmethod
@@ -137,6 +164,7 @@ class ModelFactory(object):
 
     user = User
     account = Account
+    voicemail = Voicemail
 
     json = JSONModel
     id = IDModel

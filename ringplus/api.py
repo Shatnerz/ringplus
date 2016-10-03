@@ -63,7 +63,7 @@ class API(object):
         """Get a specific account"""
         return bind_api(
             api=self,
-            path='accounts/{account_id}',
+            path='/accounts/{account_id}',
             payload_type='account')
 
     @property
@@ -160,7 +160,12 @@ class API(object):
     @property
     def voicemail(self):
         """Return an Account's paged voicemail messages."""
-        raise NotImplementedError
+        return bind_api(
+            api=self,
+            path='/voicemail_boxes/{voicemail_box_id}/voicemail_messages',
+            payload_type='voicemail',
+            payload_list=True,
+            allowed_param=['only_new', 'per_page', 'page'])
 
     @property
     def delete_voicemail(self):
