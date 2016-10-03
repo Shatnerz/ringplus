@@ -11,8 +11,24 @@ next few weeks.
 
 I plan on adding tests, documentation, and providing better examples.
 
+For now, check the examples directory to get a better understanding.
+
+
+Installation
+------------
+
+I would install on editable mode in pip via
+
+    git clone https://github.com/Shatnerz/ringplus.git
+    cd ringplus
+    pip install -e .
+
+You can also install via
+
+    pip install git+https://github.com/Shatnerz/ringplus.git
+
 Acknowledgements
-================
+----------------
 
 Although not involved, credit goes to Joshua Roesslein, creator of tweepy.
 This was mostly an education excercise trying to recreate the user-
