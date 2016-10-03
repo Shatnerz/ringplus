@@ -14,7 +14,7 @@ class API(object):
 
     def __init__(self, auth_handler=None,
                  host='api.ringplus.net', cache=None,
-                 parser=None, version='1.4', retry_count=0, retry_delay=0,
+                 parser=None, version='1', retry_count=0, retry_delay=0,
                  retry_errors=None, timeout=60,
                  wait_on_rate_limit=False, wait_on_rate_limit_notify=False,
                  proxy=''):
@@ -34,7 +34,7 @@ class API(object):
         self.proxy = proxy
 
     @property
-    def accounts(self):
+    def user_accounts(self):
         """A list of accounts belonging to a specific user."""
         return bind_api(
             api=self,
@@ -44,3 +44,117 @@ class API(object):
             allowed_param=['name', 'email_address', 'phone_number',
                            'device_esn', 'device_iccid', 'page',
                            'per_page'])
+
+    # Accounts
+    @property
+    def accounts(self):
+        """List all accounts the user has access to."""
+        return bind_api(
+            api=self,
+            path='/accounts',
+            payload_type='account',
+            payload_list=True,
+            allowed_param=['name', 'email_address', 'phone_number',
+                           'device_esn', 'device_iccid', 'page',
+                           'per_page'])
+
+    @property
+    def get_account(self):
+        """Get a specific account"""
+        return bind_api(
+            api=self,
+            path='accounts/{account_id}',
+            payload_type='account')
+
+    @property
+    def update_account(self):
+        """Update an accounts information."""
+        raise NotImplementedError
+
+    # Account Registration
+    @property
+    def register_account(self):
+        """Create a registration request to associate a user with a device."""
+        raise NotImplementedError
+
+    @property
+    def register_account_status(self):
+        """Get the status on an account registration request."""
+        raise NotImplementedError
+
+    # Change Device
+    @property
+    def change_device(self):
+        """Create a change device request to change physic device."""
+        raise NotImplementedError
+
+    @property
+    def change_device_status(self):
+        """Get the status of a device change request."""
+        raise NotImplementedError
+
+    # Change Phone Number
+    @property
+    def change_phone_number(self):
+        """Creates a request to change the phone number of an Account."""
+        raise NotImplementedError
+
+    @property
+    def change_phone_number_status(self):
+        """Get the status of a phone number change request."""
+        raise NotImplementedError
+
+    # Enforced Carrier Services
+    @property
+    def enforced_carrier_services(self):
+        """List the applied enforced carrier services of an Account."""
+        raise NotImplementedError
+
+    # Fluid Call
+    @property
+    def fluid_call_credentials(self):
+        """Get the list of FluidCall credentials."""
+        raise NotImplementedError
+
+    # Phone Calls
+    @property
+    def calls(self):
+        """Returns an account's paged phone call details."""
+        raise NotImplementedError
+
+    # Phone Texts
+    def texts(self):
+        """Returns an account's paged phone text details."""
+        raise NotImplementedError
+
+    # Phone Data
+    def data(self):
+        """Return an account's paged phone data details."""
+        raise NotImplementedError
+
+    # Users
+    @property
+    def get_user(self):
+        """Return a specific user's details."""
+        raise NotImplementedError
+
+    @property
+    def users(self):
+        """Return all Users you have access to."""
+        raise NotImplementedError
+
+    @property
+    def update_user(self):
+        """Update a User's account."""
+        raise NotImplementedError
+
+    # Voicemail Messages
+    @property
+    def voicemail(self):
+        """Return an Account's paged voicemail messages."""
+        raise NotImplementedError
+
+    @property
+    def delete_voicemail(self):
+        """Deletes a voicemail message."""
+        raise NotImplementedError
