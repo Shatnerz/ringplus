@@ -55,6 +55,9 @@ def bind_api(**config):
 
             # Manually set Host header
             self.session.headers['Host'] = self.host
+            # Set version header
+            self.session.headers['Accept'] = 'application/vnd.ringplus.v{}'.\
+                format(self.api.version)
             # Monitoring rate limits
             self._remaining_calls = None
             self._reset_time = None
