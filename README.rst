@@ -20,7 +20,9 @@ Installation
 I would install on editable mode in pip via
 
     git clone https://github.com/Shatnerz/ringplus.git
+
     cd ringplus
+
     pip install -e .
 
 You can also install via
