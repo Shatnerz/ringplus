@@ -66,12 +66,12 @@ class Account(Model):
 
     @classmethod
     def parse(cls, api, json):
-        account = cls(api)
-        setattr(account, '_json', json)
-        for k, v in json.items():
-            if k == 'account':
-                account = Account.parse(api, v)
-            else:
+        if 'account' in json:
+            account = Account.parse(api, json['account'])
+        else:
+            account = cls(api)
+            setattr(account, '_json', json)
+            for k, v in json.items():
                 setattr(account, k, v)
         return account
 
@@ -93,13 +93,16 @@ class User(Model):
 
     @classmethod
     def parse(cls, api, json):
-        user = cls(api)
-        setattr(user, '_json', json)
-        for k, v in json.items():
-            if k == 'accounts':
-                setattr(user, k, Account.parse_list(api, v))
-            else:
-                setattr(user, k, v)
+        if 'user' in json:
+            user = User.parse(api, json['user'])
+        else:
+            user = cls(api)
+            setattr(user, '_json', json)
+            for k, v in json.items():
+                if k == 'accounts':
+                    setattr(user, k, Account.parse_list(api, v))
+                else:
+                    setattr(user, k, v)
         return user
 
     @classmethod
