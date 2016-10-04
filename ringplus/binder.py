@@ -112,7 +112,7 @@ def bind_api(**config):
             full_url = 'https://' + self.host + url
 
             # Query the cache if on is available
-            # and this use a GET method.
+            # and this request uses a GET method.
             if self.use_cache and self.api.cache and self.method == 'GET':
                 cache_result = self.api.cache.get(url)
                 # if cache result found and not expired, return it
