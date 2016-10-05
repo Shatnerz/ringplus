@@ -85,6 +85,8 @@ class Account(Model):
                     setattr(account, k, ActiveDevice.parse(api, v))
                 elif k == 'voicemail_box':
                     setattr(account, k, VoicemailBox.parse(api, v))
+                elif 'billing_subscriptions' in k:
+                    setattr(account, k, BillingSubscription.parse_list(api, v))
                 else:
                     setattr(account, k, v)
         return account
@@ -139,6 +141,33 @@ class ActiveDevice(Model):
             else:
                 setattr(device, k, v)
         return device
+
+
+class BillingSubscription(Model):
+    """Billing Subscription Object."""
+
+    @classmethod
+    def parse(cls, api, json):
+        subscr = cls(api)
+        setattr(subscr, '_json', json)
+        for k, v in json.items():
+            if 'date' in k or k.endswith('at'):
+                setattr(subscr, k, iso8601.parse_date(v))
+            else:
+                setattr(subscr, k, v)
+        return subscr
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            raise RingPlusError("Cannot parse list: %s" % json_list)
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
 
 
 # User Classes
@@ -334,6 +363,7 @@ class ModelFactory(object):
     voicemailbox = VoicemailBox
     active_device = ActiveDevice
     account_service = AccountService
+    billing_subscription = BillingSubscription
 
     json = JSONModel
     id = IDModel
