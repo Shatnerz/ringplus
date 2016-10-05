@@ -64,7 +64,11 @@ class API(object):
 
     @property
     def get_account(self):
-        """Get a specific account"""
+        """Get a specific account.
+
+        This returns a more detailed account object than those returned in
+        API.user_accounts and API.accounts.
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}',
