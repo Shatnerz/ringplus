@@ -131,7 +131,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/account_registration_requests/{request_id}',
-            payload_type='json')
+            payload_type='request',
+            payload_list=True)
 
     # Change Device
     # @property
@@ -162,7 +163,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/device_change_requests/{request_id}',
-            payload_type='json')
+            payload_type='request',
+            payload_list=True)
 
     # Change Phone Number
     # @property
@@ -189,7 +191,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/phone_number_change_requests/{request_id}',
-            payload_type='json')
+            payload_type='request',
+            payload_list=True)
 
     # Enforced Carrier Services
     @property
@@ -198,7 +201,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/accounts/{account_id}/enforced_carrier_services',
-            payload_type='json',
+            payload_type='carrier_service',
+            payload_list=True,
             allowed_param=['page', 'per_page'])
 
     # Fluid Call
@@ -208,7 +212,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/accounts/{account_id}/fluidcall_credentials',
-            payload_type='json',
+            payload_type='fluidcall',
+            payload_list=True,
             allowed_param=['page', 'per_page'])
 
     # Phone Calls
