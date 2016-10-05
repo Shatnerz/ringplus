@@ -56,12 +56,24 @@ class Model(object):
     @classmethod
     def parse(cls, api, json):
         """Parse a JSON object into a model instance."""
-        raise NotImplementedError
+        service = cls(api)
+        setattr(service, '_json', json)
+        for k, v in json.items():
+            setattr(service, k, v)
+        return service
 
     @classmethod
     def parse_list(cls, api, json_list):
         """ Parse a list of JSON objects into result set of model instances."""
-        raise NotImplementedError
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            raise RingPlusError("Cannot parse list: %s" % json_list)
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
 
 
 # Account Classes
@@ -77,7 +89,7 @@ class Account(Model):
             account = cls(api)
             setattr(account, '_json', json)
             for k, v in json.items():
-                if k == 'registered_on':
+                if k.endswith('_on'):
                     setattr(account, k, iso8601.parse_date(v))
                 elif k == 'account_services':
                     setattr(account, k, AccountService.parse_list(api, v))
@@ -107,25 +119,7 @@ class Account(Model):
 class AccountService(Model):
     """Account Service Object."""
 
-    @classmethod
-    def parse(cls, api, json):
-        service = cls(api)
-        setattr(service, '_json', json)
-        for k, v in json.items():
-            setattr(service, k, v)
-        return service
-
-    @classmethod
-    def parse_list(cls, api, json_list):
-        if isinstance(json_list, list):
-            item_list = json_list
-        else:
-            raise RingPlusError("Cannot parse list: %s" % json_list)
-
-        results = ResultSet()
-        for obj in item_list:
-            results.append(cls.parse(api, obj))
-        return results
+    pass
 
 
 class ActiveDevice(Model):
@@ -156,18 +150,6 @@ class BillingSubscription(Model):
             else:
                 setattr(subscr, k, v)
         return subscr
-
-    @classmethod
-    def parse_list(cls, api, json_list):
-        if isinstance(json_list, list):
-            item_list = json_list
-        else:
-            raise RingPlusError("Cannot parse list: %s" % json_list)
-
-        results = ResultSet()
-        for obj in item_list:
-            results.append(cls.parse(api, obj))
-        return results
 
 
 # User Classes
@@ -319,13 +301,73 @@ class Voicemail(Model):
 class VoicemailBox(Model):
     """Voicemail Box Object."""
 
+    pass
+
+
+# Request Status
+
+class Request(Model):
+    """Object for all status messages of different requests."""
+
     @classmethod
     def parse(cls, api, json):
-        mailbox = cls(api)
-        setattr(mailbox, '_json', json)
+        request = cls(api)
+        setattr(request, '_json', json)
         for k, v in json.items():
-            setattr(mailbox, k, v)
-        return mailbox
+            if k == 'requested_on':
+                setattr(request, k, iso8601.parse_date(v))
+            elif k == 'account':
+                setattr(request, k, Account.parse(api, v))
+            else:
+                setattr(request, k, v)
+        return request
+
+
+# Enforced Carrier Service
+
+class CarrierService(Model):
+    """Object for Enforced Carrier Services."""
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['enforced_carrier_services']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
+
+
+# Fluid Call
+
+class FluidCall(Model):
+    """Object for fluid call credentials."""
+
+    @classmethod
+    def parse(cls, api, json):
+        call = cls(api)
+        setattr(call, '_json', json)
+        for k, v in json.items():
+            if k.endswith('_at'):
+                setattr(call, k, iso8601.parse_date(v))
+            else:
+                setattr(call, k, v)
+        return call
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = json_list['fluidcall_credentials']
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
 
 
 # Utility Classes
@@ -359,11 +401,14 @@ class ModelFactory(object):
     call = Call
     text = Text
     data = Data
+    request = Request
 
     voicemailbox = VoicemailBox
     active_device = ActiveDevice
     account_service = AccountService
     billing_subscription = BillingSubscription
+    fluidcall = FluidCall
+    carrier_service = CarrierService
 
     json = JSONModel
     id = IDModel
