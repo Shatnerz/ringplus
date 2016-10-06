@@ -46,9 +46,9 @@ class API(object):
             path='/users/{user_id}/accounts',
             payload_type='account',
             payload_list=True,
-            allowed_param=['name', 'email_address', 'phone_number',
-                           'device_esn', 'device_iccid', 'page',
-                           'per_page'])
+            allowed_param=['user_id', 'name', 'email_address',
+                           'phone_number', 'device_esn', 'device_iccid',
+                           'page', 'per_page'])
 
     @property
     def accounts(self):
@@ -72,7 +72,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/accounts/{account_id}',
-            payload_type='account')
+            payload_type='account',
+            allowed_param=['account_id'])
 
     # @property
     # def update_account(self):
@@ -132,7 +133,8 @@ class API(object):
             api=self,
             path='/account_registration_requests/{request_id}',
             payload_type='request',
-            payload_list=True)
+            payload_list=True,
+            allowed_param=['request_id'])
 
     # Change Device
     # @property
@@ -164,7 +166,8 @@ class API(object):
             api=self,
             path='/device_change_requests/{request_id}',
             payload_type='request',
-            payload_list=True)
+            payload_list=True,
+            allowed_param=['request_id'])
 
     # Change Phone Number
     # @property
@@ -192,7 +195,8 @@ class API(object):
             api=self,
             path='/phone_number_change_requests/{request_id}',
             payload_type='request',
-            payload_list=True)
+            payload_list=True,
+            allowed_param=['request_id'])
 
     # Enforced Carrier Services
     @property
@@ -203,7 +207,7 @@ class API(object):
             path='/accounts/{account_id}/enforced_carrier_services',
             payload_type='carrier_service',
             payload_list=True,
-            allowed_param=['page', 'per_page'])
+            allowed_param=['account_id', 'page', 'per_page'])
 
     # Fluid Call
     @property
@@ -214,7 +218,7 @@ class API(object):
             path='/accounts/{account_id}/fluidcall_credentials',
             payload_type='fluidcall',
             payload_list=True,
-            allowed_param=['page', 'per_page'])
+            allowed_param=['account_id', 'page', 'per_page'])
 
     # Phone Calls
     @property
@@ -225,7 +229,8 @@ class API(object):
             path='/accounts/{account_id}/phone_calls',
             payload_type='call',
             payload_list=True,
-            allowed_param=['start_date, end_date, per_page, page'])
+            allowed_param=['account_id', 'start_date',
+                           'end_date', 'per_page', 'page'])
 
     # Phone Texts
     @property
@@ -236,7 +241,8 @@ class API(object):
             path='/accounts/{account_id}/phone_texts',
             payload_type='text',
             payload_list=True,
-            allowed_param=['start_date', 'end_date', 'per_page', 'page'])
+            allowed_param=['account_id', 'start_date',
+                           'end_date', 'per_page', 'page'])
 
     # Phone Data
     @property
@@ -247,7 +253,8 @@ class API(object):
             path='/accounts/{account_id}/phone_data',
             payload_type='data',
             payload_list=True,
-            allowed_param=['start_date', 'end_date', 'per_page', 'page'])
+            allowed_param=['account_id', 'start_date',
+                           'end_date', 'per_page', 'page'])
 
     # Users
     @property
@@ -256,7 +263,8 @@ class API(object):
         return bind_api(
             api=self,
             path='/users/{user_id}',
-            payload_type='user')
+            payload_type='user',
+            allowed_param=['user_id'])
 
     @property
     def users(self):
@@ -297,7 +305,7 @@ class API(object):
             path='/voicemail_boxes/{voicemail_box_id}/voicemail_messages',
             payload_type='voicemail',
             payload_list=True,
-            allowed_param=['only_new', 'per_page', 'page'])
+            allowed_param=['voicemail_box_id', 'only_new', 'per_page', 'page'])
 
     @property
     def delete_voicemail(self):
