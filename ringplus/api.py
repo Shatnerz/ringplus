@@ -299,20 +299,11 @@ class API(object):
             payload_list=True,
             allowed_param=['only_new', 'per_page', 'page'])
 
-    # @property
-    # def delete_voicemail(self):
-    #     """Deletes a voicemail message."""
-    #     raise NotImplementedError
-
-    def delete_voicemail(self, voicemail_message_id):
+    @property
+    def delete_voicemail(self):
         """Deletes a voicemail message."""
-        path = '/voicemail_messages/{voicemail_message_id}'.\
-            format(voicemail_message_id)
-        fullpath = 'https://' + self.host + path
-
-        params = {'access_token': self.auth.access_token['access_token']}
-        resp = requests.delete(fullpath, **params)
-
-        resp = requests.put(fullpath, params=params)
-        if resp.status_code != 204:
-            raise RingPlusError("Failed to update account.")
+        return bind_api(
+            api=self,
+            path='/voicemail_messages/{voicemail_message_id}',
+            allowed_param=['voicemail_message_id'],
+            method='DELETE')
