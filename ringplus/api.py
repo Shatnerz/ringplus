@@ -2,12 +2,8 @@
 
 from __future__ import print_function
 
-from ringplus.parsers import Parser, ModelParser
+from ringplus.parsers import ModelParser
 from ringplus.binder import bind_api
-
-# for calls that currently dont use binder
-from ringplus.error import RingPlusError
-import requests
 
 
 class API(object):
