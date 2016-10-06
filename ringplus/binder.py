@@ -4,6 +4,7 @@ from __future__ import print_function
 import re
 import requests
 import time
+import logging
 
 from six.moves.urllib.parse import quote
 
@@ -13,6 +14,8 @@ from ringplus.error import is_rate_limit_error_message
 from ringplus.models import Model
 
 re_path_template = re.compile('{\w+}')
+
+log = logging.getLogger('ringplus.binder')
 
 
 def bind_api(**config):
@@ -82,6 +85,8 @@ def bind_api(**config):
 
                 self.session.params[k] = convert_to_utf8_str(arg)
 
+            log.info("PARAMS: %r", self.session.params)
+
         def build_path(self):
             for variable in re_path_template.findall(self.path):
                 name = variable.strip('{}')
@@ -140,7 +145,7 @@ def bind_api(**config):
                                 sleeptime = self._reset_time - int(time.time())
                                 if sleeptime > 0:
                                     if self.wait_on_rate_limit_notify:
-                                        print("Rate limit reached."\
+                                        print("Rate limit reached."
                                               "Sleeping for:", sleeptime)
                                     time.sleep(sleeptime + 5)
 
@@ -172,7 +177,8 @@ def bind_api(**config):
                 if reset_time is not None:
                     self._reset_time = int(reset_time)
                 if self.wait_on_rate_limit and self._remaining_calls == 0 and (
-                        # if ran out of calls before waiting switching retry last call
+                        # if ran out of calls before waiting switching,
+                        # retry last call
                         resp.status_code == 429 or resp.status_code == 420):
                     continue
                 retry_delay = self.retry_delay
