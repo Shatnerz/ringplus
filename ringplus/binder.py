@@ -28,9 +28,9 @@ def bind_api(**config):
         payload_list = config.get('payload_list', False)
         allowed_param = config.get('allowed_param', [])
         method = config.get('method', 'GET')
-        # require_auth = config.get('require_auth', False)
-        # search_api = config.get('search_api', False)
-        # upload_api = config.get('upload_api', False)
+        # post_container is for the weird format used by ring plus for
+        # put and post requests, ie params{'account[name']: "John Smith"}
+        post_container = config.get('post_container', None)
         use_cache = config.get('use_cache', True)
         session = requests.Session()
 
@@ -66,13 +66,19 @@ def bind_api(**config):
             self._reset_time = None
 
         def build_parameters(self, args, kwargs):
+            """Configure the parameters to be sent with the request."""
             self.session.params = {}
+
             for idx, arg in enumerate(args):
                 if arg is None:
                     continue
                 try:
                     utf8str = convert_to_utf8_str(arg)
-                    self.session.params[self.allowed_param[idx]] = utf8str
+                    key = self.allowed_param[idx]
+                    if self.method in ('PUT', 'POST') and self.post_container:
+                        # Convert to ringplus PUT/POST format
+                        key = self.post_container + '[{}]'.format(key)
+                    self.session.params[key] = utf8str
                 except IndexError:
                     raise RingPlusError('Too many parameters supplied!')
 
@@ -80,14 +86,19 @@ def bind_api(**config):
                 if arg is None:
                     continue
                 if k in self.session.params:
-                    err_str = 'Multiple values for parameter %s supplied!' % k
-                    raise RingPlusError(err_str)
+                    err = 'Multiple values for parameter %s supplied!' % k
+                    raise RingPlusError(err)
 
-                self.session.params[k] = convert_to_utf8_str(arg)
+                utf8str = convert_to_utf8_str(arg)
+                if self.method in ('PUT', 'POST') and self.post_container:
+                        # Convert to ringplus PUT/POST format
+                        k = self.post_container + '[{}]'.format(k)
+                self.session.params[k] = utf8str
 
             log.info("PARAMS: %r", self.session.params)
 
         def build_path(self):
+            """Make appropriate substitutions to build path."""
             for variable in re_path_template.findall(self.path):
                 name = variable.strip('{}')
 
@@ -110,6 +121,7 @@ def bind_api(**config):
                 self.path = self.path.replace(variable, value)
 
         def execute(self):
+            """Make the request."""
             self.api.cached_result = False
 
             # Build the request URL
