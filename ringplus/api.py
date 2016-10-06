@@ -75,27 +75,17 @@ class API(object):
             payload_type='account',
             allowed_param=['account_id'])
 
-    # @property
-    # def update_account(self):
-    #     """Update an accounts information."""
-    #     # dont use bind api for now
-    #     return bind_api(
-    #         api=self,
-    #         path='/accounts/{account_id}',
-    #         method='PUT',
-    #         allowed_param=['name'])
-
-    def update_account(self, account_id, name):
+    @property
+    def update_account(self):
         """Update an accounts information."""
-        path = '/accounts/{account_id}'.format(account_id=account_id)
-        fullpath = 'https://' + self.host + path
+        # dont use bind api for now
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}',
+            method='PUT',
+            post_container='account',
+            allowed_param=['account_id', 'name'])
 
-        params = {'access_token': self.auth.access_token['access_token'],
-                  'account[name]': name}
-
-        resp = requests.put(fullpath, params=params)
-        if resp.status_code != 204:
-            raise RingPlusError("Failed to update account.")
 
     # Account Registration
     # @property
