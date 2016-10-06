@@ -86,35 +86,18 @@ class API(object):
             post_container='account',
             allowed_param=['account_id', 'name'])
 
-
     # Account Registration
-    # @property
-    # def register_account(self):
-    #     """Create a registration request to associate a user with a device."""
-    #     raise NotImplementedError
-
-    def register_account(self, user_id, name, billing_plan_id, device_esn,
-                         device_iccid=None, credit_card_id=None):
+    @property
+    def register_account(self):
         """Create a registration request to associate a user with a device."""
-        path = '/users/{user_id}/account_registration_requests'.\
-            format(user_id=user_id)
-        fullpath = 'https://' + self.host + path
-
-        params = {'access_token': self.auth.access_token['access_token'],
-                  'account_registration_request[name]': name,
-                  'account_registration_request[billing_plan_id]': billing_plan_id,
-                  'account_registration_request[device_esn]': device_esn,
-                  'account_registration_request[device_iccid]': device_iccid}
-        if device_iccid:
-            params['account_registration_request[device_iccid]'] = device_iccid
-        if credit_card_id:
-            params['account_registration_request[credit_card_id]'] = credit_card_id 
-
-        resp = requests.post(fullpath, params=params)
-        if resp.status_code == 400 or 401:
-            raise RingPlusError("Failed to update account.")
-
-        return resp.json()
+        return bind_api(
+            api=self,
+            path='/users/{user_id}/account_registration_requests',
+            method='POST',
+            post_container='account_registration_request',
+            payload_type='request',
+            allowed_param=['user_id', 'name', 'billing_plan_id',
+                           'device_esn', 'device_iccid', 'credit_card_id'])
 
     @property
     def register_account_status(self):
@@ -127,27 +110,16 @@ class API(object):
             allowed_param=['request_id'])
 
     # Change Device
-    # @property
-    # def change_device(self):
-    #     """Create a change device request to change physic device."""
-    #     raise NotImplementedError
-
-    def change_device(self, account_id, new_esn, new_iccid=None):
+    @property
+    def change_device(self):
         """Create a change device request to change physic device."""
-        path = 'accounts/{account_id}/device_change_requests'.\
-            format(account_id=account_id)
-        fullpath = 'https://' + self.host + path
-
-        params = {'access_token': self.auth.access_token['access_token'],
-                  'device_change_request[device_esn]': new_esn}
-        if new_iccid:
-            params['device_change_request[device_iccid]'] = new_iccid
-
-        resp = requests.post(fullpath, params=params)
-        if resp.status_code == 400 or 401:
-            raise RingPlusError("Failed to update account.")
-
-        return resp.json()
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}/device_change_requests',
+            method='POST',
+            post_container='device_change_request',
+            payload_type='request',
+            allowed_param=['account_id', 'device_esn', 'device_iccid'])
 
     @property
     def change_device_status(self):
@@ -160,23 +132,15 @@ class API(object):
             allowed_param=['request_id'])
 
     # Change Phone Number
-    # @property
-    # def change_phone_number(self):
-    #     """Creates a request to change the phone number of an Account."""
-    #     raise NotImplementedError
-
-    def change_phone_number(self, account_id):
+    @property
+    def change_phone_number(self):
         """Creates a request to change the phone number of an Account."""
-        path = '/accounts/{account_id}/phone_number_change_requests'.\
-            format(account_id=account_id)
-        fullpath = 'https://' + self.host + path
-
-        params = {'access_token': self.auth.access_token['access_token']}
-        resp = requests.post(fullpath, params=params)
-        if resp.status_code == 400 or 401:
-            raise RingPlusError("Failed to update account.")
-
-        return resp.json()
+        return bind_api(
+            api=self,
+            path='/accounts/{account_id}/phone_number_change_requests',
+            method='POST',
+            payload_type='request',
+            allowed_param=['account_id'])
 
     @property
     def change_phone_number_status(self):
@@ -266,25 +230,15 @@ class API(object):
             payload_list=True,
             allowed_param=['email_address', 'per_page', 'page'])
 
-    # @property
-    # def update_user(self):
-    #     """Update a User's account."""
-    #     raise NotImplementedError
-
-    def update_user(self, user_id, email=None, password=None):
-        """Update an accounts information."""
-        path = '/users/{user_id}'.format(user_id=user_id)
-        fullpath = 'https://' + self.host + path
-
-        params = {'access_token': self.auth.access_token['access_token']}
-        if email:
-            params['user[email]'] = email
-        if password:
-            params['user[password]'] = password
-
-        resp = requests.put(fullpath, params=params)
-        if resp.status_code != 204:
-            raise RingPlusError("Failed to update user.")
+    @property
+    def update_user(self):
+        """Update a User's account."""
+        return bind_api(
+            api=self,
+            path='/users/{user_id}',
+            method='PUT',
+            post_container='user',
+            allowed_param=['user_id', 'email', 'password'])
 
     # Voicemail Messages
     @property
