@@ -1,5 +1,8 @@
 """Example script where every api call is used once."""
 
+# NOTE: This may make changes to your account.
+# Do not blindly run.
+
 from __future__ import print_function
 from ringplus.auth import OAuthHandler
 from ringplus.api import API
@@ -118,6 +121,7 @@ print()
 # Delete first voicemail
 voicemail_msg_id = voicemail[0].id
 api.delete_voicemail(voicemail_message_id=voicemail_msg_id)
+# api.delete_voicemail(voicemail_msg_id)  # same as above
 
 
 # Change account name to 'Steve'
