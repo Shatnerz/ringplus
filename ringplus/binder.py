@@ -77,7 +77,8 @@ def bind_api(**config):
                     key = self.allowed_param[idx]
                     if self.method in ('PUT', 'POST') and self.post_container:
                         # Convert to ringplus PUT/POST format
-                        key = self.post_container + '[{}]'.format(key)
+                        if key not in ('account_id', 'user_id'):
+                            key = self.post_container + '[{}]'.format(key)
                     self.session.params[key] = utf8str
                 except IndexError:
                     raise RingPlusError('Too many parameters supplied!')
@@ -92,7 +93,8 @@ def bind_api(**config):
                 utf8str = convert_to_utf8_str(arg)
                 if self.method in ('PUT', 'POST') and self.post_container:
                         # Convert to ringplus PUT/POST format
-                        k = self.post_container + '[{}]'.format(k)
+                        if k not in ('account_id', 'user_id'):
+                            k = self.post_container + '[{}]'.format(k)
                 self.session.params[k] = utf8str
 
             log.info("PARAMS: %r", self.session.params)

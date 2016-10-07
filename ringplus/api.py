@@ -36,7 +36,10 @@ class API(object):
     # Accounts
     @property
     def user_accounts(self):
-        """A list of accounts belonging to a specific user."""
+        """A list of accounts belonging to a specific user.
+
+        user_id - required
+        """
         return bind_api(
             api=self,
             path='/users/{user_id}/accounts',
@@ -64,6 +67,8 @@ class API(object):
 
         This returns a more detailed account object than those returned in
         API.user_accounts and API.accounts.
+
+        account_id - required
         """
         return bind_api(
             api=self,
@@ -73,8 +78,12 @@ class API(object):
 
     @property
     def update_account(self):
-        """Update an accounts information."""
-        # dont use bind api for now
+        """Update an accounts information.
+
+        account_id - required
+
+        No content returned
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}',
@@ -85,7 +94,16 @@ class API(object):
     # Account Registration
     @property
     def register_account(self):
-        """Create a registration request to associate a user with a device."""
+        """Create a registration request to associate a user with a device.
+
+        user_id - required
+        name - required
+        billing_plan_id - required
+        device_esn - required
+        credit_card_id - required
+
+        device_iccid - optional
+        """
         return bind_api(
             api=self,
             path='/users/{user_id}/account_registration_requests',
@@ -97,7 +115,10 @@ class API(object):
 
     @property
     def register_account_status(self):
-        """Get the status on an account registration request."""
+        """Get the status on an account registration request.
+
+        request_id - required
+        """
         return bind_api(
             api=self,
             path='/account_registration_requests/{request_id}',
@@ -108,7 +129,11 @@ class API(object):
     # Change Device
     @property
     def change_device(self):
-        """Create a change device request to change physic device."""
+        """Create a change device request to change physic device.
+
+        account_id - required
+        device_esn - required - new_esn
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/device_change_requests',
@@ -119,7 +144,10 @@ class API(object):
 
     @property
     def change_device_status(self):
-        """Get the status of a device change request."""
+        """Get the status of a device change request.
+
+        request_id - required
+        """
         return bind_api(
             api=self,
             path='/device_change_requests/{request_id}',
@@ -130,7 +158,10 @@ class API(object):
     # Change Phone Number
     @property
     def change_phone_number(self):
-        """Creates a request to change the phone number of an Account."""
+        """Creates a request to change the phone number of an Account.
+
+        account_id - required
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_number_change_requests',
@@ -140,7 +171,9 @@ class API(object):
 
     @property
     def change_phone_number_status(self):
-        """Get the status of a phone number change request."""
+        """Get the status of a phone number change request.
+
+        request_id - required"""
         return bind_api(
             api=self,
             path='/phone_number_change_requests/{request_id}',
@@ -151,7 +184,9 @@ class API(object):
     # Enforced Carrier Services
     @property
     def enforced_carrier_services(self):
-        """List the applied enforced carrier services of an Account."""
+        """List the applied enforced carrier services of an Account.
+
+        account_id - required"""
         return bind_api(
             api=self,
             path='/accounts/{account_id}/enforced_carrier_services',
@@ -162,7 +197,9 @@ class API(object):
     # Fluid Call
     @property
     def fluid_call_credentials(self):
-        """Get the list of FluidCall credentials."""
+        """Get the list of FluidCall credentials.
+
+        account_id - required"""
         return bind_api(
             api=self,
             path='/accounts/{account_id}/fluidcall_credentials',
@@ -173,7 +210,9 @@ class API(object):
     # Phone Calls
     @property
     def calls(self):
-        """Returns an account's paged phone call details."""
+        """Returns an account's paged phone call details.
+
+        account_id - required"""
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_calls',
@@ -185,7 +224,10 @@ class API(object):
     # Phone Texts
     @property
     def texts(self):
-        """Returns an account's paged phone text details."""
+        """Returns an account's paged phone text details.
+
+        account_id - required
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_texts',
@@ -197,7 +239,9 @@ class API(object):
     # Phone Data
     @property
     def data(self):
-        """Return an account's paged phone data details."""
+        """Return an account's paged phone data details.
+
+        account_id - required"""
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_data',
@@ -209,7 +253,9 @@ class API(object):
     # Users
     @property
     def get_user(self):
-        """Return a specific user's details."""
+        """Return a specific user's details.
+
+        user_id - required"""
         return bind_api(
             api=self,
             path='/users/{user_id}',
@@ -228,7 +274,9 @@ class API(object):
 
     @property
     def update_user(self):
-        """Update a User's account."""
+        """Update a User's account.
+
+        user_id - required"""
         return bind_api(
             api=self,
             path='/users/{user_id}',
@@ -239,7 +287,9 @@ class API(object):
     # Voicemail Messages
     @property
     def voicemail(self):
-        """Return an Account's paged voicemail messages."""
+        """Return an Account's paged voicemail messages.
+
+        voicemail_box_id - required"""
         return bind_api(
             api=self,
             path='/voicemail_boxes/{voicemail_box_id}/voicemail_messages',
@@ -249,7 +299,9 @@ class API(object):
 
     @property
     def delete_voicemail(self):
-        """Deletes a voicemail message."""
+        """Deletes a voicemail message.
+
+        voicemail_message_id - required"""
         return bind_api(
             api=self,
             path='/voicemail_messages/{voicemail_message_id}',

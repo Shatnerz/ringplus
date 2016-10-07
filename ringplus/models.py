@@ -311,16 +311,35 @@ class Request(Model):
 
     @classmethod
     def parse(cls, api, json):
-        request = cls(api)
-        setattr(request, '_json', json)
         for k, v in json.items():
-            if k == 'requested_on':
-                setattr(request, k, iso8601.parse_date(v))
-            elif k == 'account':
-                setattr(request, k, Account.parse(api, v))
-            else:
-                setattr(request, k, v)
+            if k in ('phone_number_change_request',
+                     'device_change_request',
+                     'account_registration_request'):
+                request = Request.parse(api, json[k])
+        else:
+            request = cls(api)
+            setattr(request, '_json', json)
+            for k, v in json.items():
+                if k == 'requested_on':
+                    setattr(request, k, iso8601.parse_date(v))
+                elif k == 'account':
+                    setattr(request, k, Account.parse(api, v))
+                else:
+                    setattr(request, k, v)
         return request
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        """ Parse a list of JSON objects into result set of model instances."""
+        if isinstance(json_list, list):
+            item_list = json_list
+        else:
+            item_list = [json_list]
+
+        results = ResultSet()
+        for obj in item_list:
+            results.append(cls.parse(api, obj))
+        return results
 
 
 # Enforced Carrier Service
