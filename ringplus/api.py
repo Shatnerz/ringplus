@@ -52,7 +52,18 @@ class API(object):
     def user_accounts(self):
         """A list of accounts belonging to a specific user.
 
-        user_id - required
+        Args:
+            user_id:
+            name (optional):
+            email_address (optional):
+            phone_number (optional):
+            device_esn (optional):
+            device_iccid (optional):
+            page (optional):
+            per_page (optional):
+
+        Returns
+            list: List of Account objects
         """
         return bind_api(
             api=self,
@@ -65,7 +76,20 @@ class API(object):
 
     @property
     def accounts(self):
-        """List all accounts the user has access to."""
+        """List all accounts the user has access to.
+
+        Args:
+            name (optional):
+            email_address (optional):
+            phone_number (optional):
+            device_esn (optional):
+            device_iccid (optional):
+            page (optional):
+            per_page (optional):
+
+        Returns
+            list: List of Account objects
+        """
         return bind_api(
             api=self,
             path='/accounts',
@@ -82,7 +106,12 @@ class API(object):
         This returns a more detailed account object than those returned in
         API.user_accounts and API.accounts.
 
-        account_id - required
+        Args:
+            account_id:
+            name (optional):
+
+        Returns:
+            Detailed Account object.
         """
         return bind_api(
             api=self,
@@ -94,9 +123,9 @@ class API(object):
     def update_account(self):
         """Update an accounts information.
 
-        account_id - required
-
-        No content returned
+        Args:
+            account_id:
+            name (optional):
         """
         return bind_api(
             api=self,
@@ -110,13 +139,16 @@ class API(object):
     def register_account(self):
         """Create a registration request to associate a user with a device.
 
-        user_id - required
-        name - required
-        billing_plan_id - required
-        device_esn - required
-        credit_card_id - required
+        Args:
+            user_id:
+            name:
+            billing_plan_id:
+            device_esn:
+            credit_card_id:
+            device_iccid (optional)
 
-        device_iccid - optional
+        Returns:
+            Account Registration Request Status object.
         """
         return bind_api(
             api=self,
@@ -131,7 +163,11 @@ class API(object):
     def register_account_status(self):
         """Get the status on an account registration request.
 
-        request_id - required
+        Args:
+            request_id:
+
+        Returns:
+            list: List of Account Registration Status objects.
         """
         return bind_api(
             api=self,
@@ -145,8 +181,13 @@ class API(object):
     def change_device(self):
         """Create a change device request to change physic device.
 
-        account_id - required
-        device_esn - required - new_esn
+        Args:
+            account_id:
+            device_esn: ESN of new device.
+            device_iccid (optional): ICCID of new device.
+
+        Returns:
+            Change Device Request Status object.
         """
         return bind_api(
             api=self,
@@ -160,7 +201,11 @@ class API(object):
     def change_device_status(self):
         """Get the status of a device change request.
 
-        request_id - required
+        Args:
+            request_id:
+
+        Returns:
+            list: List of Device Request Status objects.
         """
         return bind_api(
             api=self,
@@ -174,7 +219,11 @@ class API(object):
     def change_phone_number(self):
         """Creates a request to change the phone number of an Account.
 
-        account_id - required
+        Args:
+            account_id:
+
+        Returns:
+            Change Phone Number Request Status object.
         """
         return bind_api(
             api=self,
@@ -187,7 +236,12 @@ class API(object):
     def change_phone_number_status(self):
         """Get the status of a phone number change request.
 
-        request_id - required"""
+        Args:
+            request_id:
+
+        Returns:
+            list: List of Change Phone Number Request Status objects.
+        """
         return bind_api(
             api=self,
             path='/phone_number_change_requests/{request_id}',
@@ -200,7 +254,14 @@ class API(object):
     def enforced_carrier_services(self):
         """List the applied enforced carrier services of an Account.
 
-        account_id - required"""
+        Args:
+            account_id:
+            page (optional):
+            per_page (optional):
+
+        Returns:
+            list: List of Carrier Service objects.
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/enforced_carrier_services',
@@ -213,7 +274,14 @@ class API(object):
     def fluid_call_credentials(self):
         """Get the list of FluidCall credentials.
 
-        account_id - required"""
+        Args:
+            account_id:
+            page (optional):
+            per_page (optional):
+
+        Returns:
+            list: List of Fluid Call objects.
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/fluidcall_credentials',
@@ -226,7 +294,16 @@ class API(object):
     def calls(self):
         """Returns an account's paged phone call details.
 
-        account_id - required"""
+        Args:
+            account_id:
+            start_date (optional):
+            end_date (optional):
+            per_page (optional):
+            page (optional):
+
+        Returns:
+            list: List of Call objects.
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_calls',
@@ -240,7 +317,15 @@ class API(object):
     def texts(self):
         """Returns an account's paged phone text details.
 
-        account_id - required
+        Args:
+            account_id:
+            start_date (optional):
+            end_date (optional):
+            per_page (optional):
+            page (optional):
+
+        Returns:
+            list: List of Text objects.
         """
         return bind_api(
             api=self,
@@ -255,7 +340,16 @@ class API(object):
     def data(self):
         """Return an account's paged phone data details.
 
-        account_id - required"""
+        Args:
+            account_id:
+            start_date (optional):
+            end_date (optional):
+            per_page (optional):
+            page (optional):
+
+        Returns:
+            list: List of Data objects.
+        """
         return bind_api(
             api=self,
             path='/accounts/{account_id}/phone_data',
@@ -269,7 +363,12 @@ class API(object):
     def get_user(self):
         """Return a specific user's details.
 
-        user_id - required"""
+        Args:
+            user_id:
+
+        Returns:
+            User object.
+        """
         return bind_api(
             api=self,
             path='/users/{user_id}',
@@ -278,7 +377,16 @@ class API(object):
 
     @property
     def users(self):
-        """Return all Users you have access to."""
+        """Return all Users you have access to.
+
+        Args:
+            email_address (optional):
+            per_page (optional):
+            page (optional):
+
+        Returns:
+            list: List of User objects.
+        """
         return bind_api(
             api=self,
             path='/users',
@@ -290,7 +398,11 @@ class API(object):
     def update_user(self):
         """Update a User's account.
 
-        user_id - required"""
+        Args:
+            user_id:
+            email (optional): New email.
+            password (optional): New password.        
+        """
         return bind_api(
             api=self,
             path='/users/{user_id}',
@@ -303,7 +415,15 @@ class API(object):
     def voicemail(self):
         """Return an Account's paged voicemail messages.
 
-        voicemail_box_id - required"""
+        Args:
+            voicemail_box_id:
+            only_new (optional):
+            per_page (optional):
+            page (optional):
+
+        Returns:
+            list: Paged list of voicemail message objects.
+        """
         return bind_api(
             api=self,
             path='/voicemail_boxes/{voicemail_box_id}/voicemail_messages',
@@ -315,7 +435,9 @@ class API(object):
     def delete_voicemail(self):
         """Deletes a voicemail message.
 
-        voicemail_message_id - required"""
+        Args:
+            voicemail_message_id:
+        """
         return bind_api(
             api=self,
             path='/voicemail_messages/{voicemail_message_id}',
