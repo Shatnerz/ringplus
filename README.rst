@@ -29,6 +29,13 @@ You can also install via
 
     pip install git+https://github.com/Shatnerz/ringplus.git
 
+
+Notes
+-----
+
+I'm not sure how to check the registration requests, change device requests,
+and change phone number requests. There may be issues with that code.
+
 Acknowledgements
 ----------------
 
