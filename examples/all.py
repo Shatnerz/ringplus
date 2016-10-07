@@ -19,7 +19,7 @@ REDIRECT_URI = 'REDIRECT URI HERE'
 auth = OAuthHandler(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
 # Login and retreive access token
-auth.login('YOUR USERNAME (EMAIL)', 'YOUR PASSWORD')
+auth.login('andrew.ahlers@gmail.com', 'Timmy0220')
 pprint(auth.access_token)
 print()
 # >>> {'access_token': 'a64d6754621d2d2...',
@@ -118,17 +118,16 @@ except:
 print()
 
 
-# Delete first voicemail
-voicemail_msg_id = voicemail[0].id
-api.delete_voicemail(voicemail_message_id=voicemail_msg_id)
-# api.delete_voicemail(voicemail_msg_id)  # same as above
+# # Delete first voicemail
+# voicemail_msg_id = voicemail[0].id
+# api.delete_voicemail(voicemail_message_id=voicemail_msg_id)
 
 
-# Change account name to 'Steve'
-api.update_account(account_id=account_id, name='Steve')
-# Get the updated account object and print the updated name
-specific_account = api.get_account(account_id=account_id)
-print('New name:', specific_account.name)
+# # Change account name to 'Steve'
+# api.update_account(account_id=account_id, name='Steve')
+# # Get the updated account object and print the updated name
+# specific_account = api.get_account(account_id=account_id)
+# print('New name:', specific_account.name)
 
 
 # TODO
@@ -141,6 +140,7 @@ print('New name:', specific_account.name)
 
 # TODO
 # Change Phone Number Examples
+# new_number_request = api.change_phone_number(account_id)
 
 
 # TODO
@@ -149,3 +149,9 @@ print('New name:', specific_account.name)
 
 # TODO
 # Fluid Call Examples
+
+
+# Bad Request example
+# a = api.change_device(account_id=account_id)
+# missing required arguments
+# Raises RingPlusError: 400 Bad Request
