@@ -15,7 +15,10 @@ class RingPlusError(Exception):
         Exception.__init__(self, reason)
 
     def __str__(self):
-        return self.reason
+        if self.api_code:
+            return self.api_code + ' ' + self.reason
+        else:
+            return self.reason
 
 
 def is_rate_limit_error_message(message):

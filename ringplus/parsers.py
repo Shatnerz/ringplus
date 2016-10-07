@@ -64,7 +64,7 @@ class JSONParser(Parser):
 
         if 'error' in error_object:
             reason = error_object['error']
-            api_code = error_object.get('code')
+            api_code = error_object.get('status')
         else:
             reason = error_object['errors']
             api_code = [error.get('code') for error in
