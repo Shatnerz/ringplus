@@ -18,7 +18,21 @@ class API(object):
                  retry_errors=None, timeout=60,
                  wait_on_rate_limit=False, wait_on_rate_limit_notify=False,
                  proxy=''):
-        """API instance constructor."""
+        """API instance constructor.
+
+        Args:
+            auth_handler
+            host:  url of the server of the rest api, default:'api.ringplus.net'
+            cache: Cache to query if a GET method is used, default:None
+            parser: ModelParser instance to parse the responses, default:None
+            version: Major version number to include in header, default 1
+            retry_count: number of allowed retries, default:0
+            retry_errors: default:None
+            timeout: delay before to consider the request as timed out in seconds, default:60
+            wait_on_rate_limit: If the api wait when it hits the rate limit, default:False
+            wait_on_rate_limit_notify: If the api print a notification when the rate limit is hit, default:False
+            proxy: Url to use as proxy during the HTTP request, default:''
+        """
 
         self.auth = auth_handler
         self.host = host
