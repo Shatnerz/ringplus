@@ -4,6 +4,24 @@ from __future__ import print_function
 
 import six
 
+# 200 OK
+
+# 201 Created,
+
+# 202 Accepted
+
+# 204 No Content
+
+# 400 Bad Request
+
+# 401 Unauthorized
+
+# 403 Forbidden
+
+# 404 Not Found
+
+# 422 Unprocessable Entity
+
 
 class RingPlusError(Exception):
     """RingPlus Exception"""

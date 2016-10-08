@@ -19,6 +19,22 @@ log = logging.getLogger('ringplus.binder')
 
 
 def bind_api(**config):
+    """Given a configuration, returns a function which makes an API call.
+
+    Args:
+        api (API): Instance of an API class.
+        path: The path of the api call, ie. '/users/{user_id}/accounts'
+        payload_type (str): String defining the payload to be returned.
+            default:None
+        payload_list (bool): Whether to return a list or not. default:None
+        allowed_param (list): List of the allowed parameter strings.
+            default: []
+        method (str): The request method to be used. default: 'GET'
+        post_container (str): The name of the container to be used when
+            using 'POST' or 'PUT' methods. default:None
+        use_cache (bool): Where to use cache or not. default:False
+
+    """
 
     class APIMethod(object):
 

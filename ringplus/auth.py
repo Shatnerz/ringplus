@@ -9,12 +9,35 @@ from bs4 import BeautifulSoup
 
 
 class OAuthHandler(object):
-    """OAuth Authentication Handler."""
+    """OAuth Authentication Handler.
+
+    OAuthHandler is used to simplify the OAuth2 authentication process.
+
+    All authentication into the RingPlus API must been done using OAuth 2.0
+    over HTTPS. It allows applications to access user details without needing
+    their password, allows limiting access to only what the application
+    requires, and can be revoked by users at any time.
+
+    All application developers need to register their application by visiting
+    the Application tab on their Settings page. A registered application is
+    assigned a Client ID and Client Secret. Your Client Secret should not be
+    shared with anyone.
+
+    Using your Client ID and Secret, you will be able to get an Authorization
+    Token for a user, and make requests to the API for their data.
+    """
 
     AUTHORIZATION_BASE_URL = 'https://my.ringplus.net/oauth/authorize'
     TOKEN_URL = 'https://my.ringplus.net/oauth/token'
 
     def __init__(self, client_id, client_secret, redirect_uri):
+        """OAuthHandler instance contructor.
+
+        Args:
+            client_id: Client ID associated with the app.
+            client_secret: Client secret.
+            redirect_uri: The redirect URI exactly as listed on RingPlus.
+        """
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -22,14 +45,18 @@ class OAuthHandler(object):
         self.oauth = OAuth2Session(client_id, redirect_uri=redirect_uri)
 
     def get_authorization_url(self, **kwargs):
-        """Returns the authorization URL to redirect users"""
+        """Returns the authorization URL to redirect users."""
         response = self.oauth.authorization_url(self.AUTHORIZATION_BASE_URL,
                                                 **kwargs)
         authorization_url, state = response
         return authorization_url
 
     def fetch_token(self, authorization_response):
-        """Use the authorization response url to fetch a token."""
+        """Use the authorization response url to fetch a token.
+
+        Returns:
+            dict: A dictionary representing the token.
+        """
         token = self.oauth.fetch_token(
             self.TOKEN_URL,
             authorization_response=authorization_response,
@@ -48,7 +75,11 @@ class OAuthHandler(object):
     def login(self, username, password, **kwargs):
         """Hackish method to sign into RingPlus without going to site.
 
-        This sets the access token.
+        This sets the access token for the OAutherHandler instance.
+
+        Args:
+            username: Username used to login to Ring Plus (likely your email).
+            password: The password used to login to Ring Plus.
         """
         session = requests.Session()
         params = {'response_type': 'code',

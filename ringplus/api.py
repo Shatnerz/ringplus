@@ -7,7 +7,7 @@ from ringplus.binder import bind_api
 
 
 class API(object):
-    """RingPlus API.
+    """A python wrapper for the RingPlus API.
 
     :reference: https://docs.ringplus.net/
     """
@@ -21,17 +21,25 @@ class API(object):
         """API instance constructor.
 
         Args:
-            auth_handler
-            host:  url of the server of the rest api, default:'api.ringplus.net'
-            cache: Cache to query if a GET method is used, default:None
-            parser: ModelParser instance to parse the responses, default:None
-            version: Major version number to include in header, default 1
+            auth_handler: The OAutherHandler from to use to retreive the
+                authorization token.
+            host:  url of the server of the rest api.
+                default:'api.ringplus.net'
+            cache: Cache to query if a GET method is used.
+                default:None
+            parser: ModelParser instance to parse the responses.
+                default:None
+            version: Major version number to include in header.
+                default 1
             retry_count: number of allowed retries, default:0
             retry_errors: default:None
-            timeout: delay before to consider the request as timed out in seconds, default:60
-            wait_on_rate_limit: If the api wait when it hits the rate limit, default:False
-            wait_on_rate_limit_notify: If the api print a notification when the rate limit is hit, default:False
-            proxy: Url to use as proxy during the HTTP request, default:''
+            timeout: delay before to consider the request as timed out in
+                seconds. default:60
+            wait_on_rate_limit: If the api wait when it hits the rate limit.
+                default:False
+            wait_on_rate_limit_notify: If the api print a notification when
+                the rate limit is hit. default:False
+            proxy: Url to use as proxy during the HTTP request. default:''
         """
 
         self.auth = auth_handler
@@ -52,15 +60,24 @@ class API(object):
     def user_accounts(self):
         """A list of accounts belonging to a specific user.
 
+        scope: public
+
         Args:
-            user_id:
-            name (optional):
-            email_address (optional):
-            phone_number (optional):
-            device_esn (optional):
-            device_iccid (optional):
-            page (optional):
-            per_page (optional):
+            user_id: User ID
+            name (optional): The name of the account to filter by.
+                Currently does not partial or full text search.
+            email_address (optional): The email_address of the account to
+                filter by. Currently does not partial or full text search.
+            phone_number (optional): The phone_number of the account to
+                filter by. Currently does not partial or full text search.
+            device_esn (optional): The active device_esn of the account to
+                filter by. Currently does not partial or full text search.
+            device_iccid (optional): The active device_iccid of the account to
+                filter by. Currently does not partial or full text search.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
 
         Returns
             list: List of Account objects
@@ -78,14 +95,23 @@ class API(object):
     def accounts(self):
         """List all accounts the user has access to.
 
+        scope: public
+
         Args:
-            name (optional):
-            email_address (optional):
-            phone_number (optional):
-            device_esn (optional):
-            device_iccid (optional):
-            page (optional):
-            per_page (optional):
+            name (optional): The name of the account to filter by.
+                Currently does not partial or full text search.
+            email_address (optional): The email_address of the account to
+                filter by. Currently does not partial or full text search.
+            pphone_number (optional): The phone_number of the account to
+                filter by. Currently does not partial or full text search.
+            ddevice_esn (optional): The active device_esn of the account to
+                filter by. Currently does not partial or full text search.
+            device_iccid (optional): The active device_iccid of the account to
+                filter by. Currently does not partial or full text search.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
 
         Returns
             list: List of Account objects
@@ -106,9 +132,10 @@ class API(object):
         This returns a more detailed account object than those returned in
         API.user_accounts and API.accounts.
 
+        scope: public
+
         Args:
-            account_id:
-            name (optional):
+            account_id: Account ID
 
         Returns:
             Detailed Account object.
@@ -123,9 +150,11 @@ class API(object):
     def update_account(self):
         """Update an accounts information.
 
+        scope: manage
+
         Args:
-            account_id:
-            name (optional):
+            account_id: Account ID
+            name (optional): Update the name of an account.
         """
         return bind_api(
             api=self,
@@ -139,13 +168,19 @@ class API(object):
     def register_account(self):
         """Create a registration request to associate a user with a device.
 
+        scope: request
+
         Args:
-            user_id:
-            name:
-            billing_plan_id:
-            device_esn:
-            credit_card_id:
-            device_iccid (optional)
+            user_id: User ID
+            name: A name for this account.
+            billing_plan_id: The ID of the billing plan to use for this
+                account.
+            device_esn: The mobile device's ESN numbers, usually an
+                alphanumeric string.
+            credit_card_id: An ID of a credit card already associated with the
+                User.
+            device_iccid (optional): The mobile device's ICCID, or SIM card
+                serial number.
 
         Returns:
             Account Registration Request Status object.
@@ -163,8 +198,10 @@ class API(object):
     def register_account_status(self):
         """Get the status on an account registration request.
 
+        scope: public
+
         Args:
-            request_id:
+            request_id: The ID of the register account request.
 
         Returns:
             list: List of Account Registration Status objects.
@@ -179,12 +216,24 @@ class API(object):
     # Change Device
     @property
     def change_device(self):
-        """Create a change device request to change physic device.
+        """Create a change device request to change physical device.
+
+        Registering new devices can take time depending on the device and
+        network conditions. The request route provide a non-blocking way of
+        sending the request. Requests that pass initial validation will return
+        with with a request ID which can be queried to find out the status of
+        the request. The status of the request will display whether the
+        request has been completed and whether it was successful.
+
+        scope: request
 
         Args:
-            account_id:
+            account_id: Account ID
             device_esn: ESN of new device.
-            device_iccid (optional): ICCID of new device.
+            device_iccid (optional): The mobile device's ICCID, or SIM card
+                serial number. This is optional, only if the device does not
+                have an ICCID. If the device has an ICCID and it is not
+                included in the request, the request will likely fail.
 
         Returns:
             Change Device Request Status object.
@@ -201,8 +250,10 @@ class API(object):
     def change_device_status(self):
         """Get the status of a device change request.
 
+        scope: public
+
         Args:
-            request_id:
+            request_id: The ID of the change device request.
 
         Returns:
             list: List of Device Request Status objects.
@@ -219,8 +270,20 @@ class API(object):
     def change_phone_number(self):
         """Creates a request to change the phone number of an Account.
 
+        Change phone number requsts allow you to change the phone number on an
+        account. Change Phone Number requests do not allow you choose your new
+        phone number, you will be assigned an available number.
+
+        The request route provide a non-blocking way of sending the request.
+        Requests that pass initial validation will return with with a request
+        ID which can be queried to find out the status of the request. The
+        status of the request will display whether the request has been
+        completed and whether it was successful.
+
+        scope: request
+
         Args:
-            account_id:
+            account_id: Account ID
 
         Returns:
             Change Phone Number Request Status object.
@@ -235,6 +298,8 @@ class API(object):
     @property
     def change_phone_number_status(self):
         """Get the status of a phone number change request.
+
+        scope: public
 
         Args:
             request_id:
@@ -254,10 +319,19 @@ class API(object):
     def enforced_carrier_services(self):
         """List the applied enforced carrier services of an Account.
 
+        Enforced Carrier Services are services offered at the carrier level
+        that have been enforced on an account. These are not the only services
+        that may be active on a given account, but are sure to override any
+        other policies.
+
+        scope: public
+
         Args:
-            account_id:
-            page (optional):
-            per_page (optional):
+            account_id: Account ID
+            page (optional): Which page of the paged results to return.
+                Default to 1.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
 
         Returns:
             list: List of Carrier Service objects.
@@ -274,10 +348,20 @@ class API(object):
     def fluid_call_credentials(self):
         """Get the list of FluidCall credentials.
 
+        FluidCall allows any VoIP phone to act as an additional handset
+        attached to an account. Currently, any number of additional FluidCall
+        connections can be made to a single account. Those connections will be
+        rung along with the primary handset, and can make calls using standard
+        SIP/RTP VoIP protocols.
+
+        scope: public
+
         Args:
-            account_id:
-            page (optional):
-            per_page (optional):
+            account_id: Account ID
+            page (optional): Which page of the paged results to return.
+                Default to 1.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
 
         Returns:
             list: List of Fluid Call objects.
@@ -294,12 +378,18 @@ class API(object):
     def calls(self):
         """Returns an account's paged phone call details.
 
+        scope: public
+
         Args:
-            account_id:
-            start_date (optional):
-            end_date (optional):
-            per_page (optional):
-            page (optional):
+            account_id: Account ID
+            start_date (datetime, optional): Return only records occurring
+                after this date.
+            end_date (datetime, optional): Return only records occurring
+                before this date.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
 
         Returns:
             list: List of Call objects.
@@ -317,12 +407,18 @@ class API(object):
     def texts(self):
         """Returns an account's paged phone text details.
 
+        scope: public
+
         Args:
-            account_id:
-            start_date (optional):
-            end_date (optional):
-            per_page (optional):
-            page (optional):
+            account_id: Account ID
+            start_date (datetime, optional): Return only records occurring
+                after this date.
+            end_date (datetime, optional): Return only records occurring
+                before this date.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
 
         Returns:
             list: List of Text objects.
@@ -340,12 +436,18 @@ class API(object):
     def data(self):
         """Return an account's paged phone data details.
 
+        scope: public
+
         Args:
-            account_id:
-            start_date (optional):
-            end_date (optional):
-            per_page (optional):
-            page (optional):
+            account_id: Account ID
+            start_date (datetime, optional): Return only records occurring
+                after this date.
+            end_date (datetime, optional): Return only records occurring
+                before this date.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
 
         Returns:
             list: List of Data objects.
@@ -363,8 +465,10 @@ class API(object):
     def get_user(self):
         """Return a specific user's details.
 
+        scope: public
+
         Args:
-            user_id:
+            user_id: User ID
 
         Returns:
             User object.
@@ -379,10 +483,15 @@ class API(object):
     def users(self):
         """Return all Users you have access to.
 
+        scope: public
+
         Args:
-            email_address (optional):
-            per_page (optional):
-            page (optional):
+            email_address (optional): The email_address of the account to
+                filter by. Currently does not partial or full text search.
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
 
         Returns:
             list: List of User objects.
@@ -398,10 +507,12 @@ class API(object):
     def update_user(self):
         """Update a User's account.
 
+        scope: manage
+
         Args:
-            user_id:
+            user_id: User ID
             email (optional): New email.
-            password (optional): New password.        
+            password (optional): New password.
         """
         return bind_api(
             api=self,
@@ -415,11 +526,15 @@ class API(object):
     def voicemail(self):
         """Return an Account's paged voicemail messages.
 
+        scope: voicemail
+
         Args:
-            voicemail_box_id:
+            voicemail_box_id: ID of the voicemail box.
             only_new (optional):
-            per_page (optional):
-            page (optional):
+            per_page (optional): How many results to return per page.
+                Defaults to 25.
+            page (optional): Which page of the paged results to return.
+                Default to 1.
 
         Returns:
             list: Paged list of voicemail message objects.
@@ -434,6 +549,8 @@ class API(object):
     @property
     def delete_voicemail(self):
         """Deletes a voicemail message.
+
+        scope: voicemail
 
         Args:
             voicemail_message_id:

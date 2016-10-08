@@ -79,7 +79,12 @@ class Model(object):
 # Account Classes
 
 class Account(Model):
-    """Object that encapsulates a mobile device on a plan."""
+    """Object that encapsulates a mobile device on a plan.
+
+    Accounts are the object that encapsulate a mobile device on a plan.
+    They belong to a User and are a base model for many other routes on
+    the API.
+    """
 
     @classmethod
     def parse(cls, api, json):
@@ -155,7 +160,12 @@ class BillingSubscription(Model):
 # User Classes
 
 class User(Model):
-    """Base object for a user on the system."""
+    """Base object for a user on the system.
+
+    User accounts are the base object representing a user on the system.
+    You can view and update various properties of users, and use User IDs to
+    query many other objects in the system.
+    """
 
     @classmethod
     def parse(cls, api, json):
