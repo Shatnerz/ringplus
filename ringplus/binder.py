@@ -5,6 +5,7 @@ import re
 import requests
 import time
 import logging
+import datetime
 
 from six.moves.urllib.parse import quote
 
@@ -88,6 +89,9 @@ def bind_api(**config):
             for idx, arg in enumerate(args):
                 if arg is None:
                     continue
+                # convert datetimes to iso 8601 strings
+                if isinstance(arg, datetime.datetime):
+                    arg = arg.isoformat()
                 try:
                     utf8str = convert_to_utf8_str(arg)
                     key = self.allowed_param[idx]
@@ -102,6 +106,9 @@ def bind_api(**config):
             for k, arg in kwargs.items():
                 if arg is None:
                     continue
+                # convert datetimes to iso 8601 strings
+                if isinstance(arg, datetime.datetime):
+                    arg = arg.isoformat()
                 if k in self.session.params:
                     err = 'Multiple values for parameter %s supplied!' % k
                     raise RingPlusError(err)
