@@ -1,7 +1,7 @@
 RingPlus for Python
 ====================
 
-Python wrapper for the RingPlus API
+Unoffical Python wrapper for the RingPlus API
 
 
 Documentation
