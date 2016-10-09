@@ -61,8 +61,8 @@ At this time, all tokens last for 24 hours. Tokens can be refreshed via::
     auth.refresh_token()
 
 
-Avoiding the Redirect Dance
-===========================
+Login Hack
+===========
 
 If one already knows the username and password to an account, and access
 token can be grabbed programmatically without having to explicitly login
