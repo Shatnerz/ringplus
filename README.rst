@@ -12,17 +12,21 @@ Documentation
 Installation
 ------------
 
-I would install on editable mode in pip via::
+Using pip and pypi::
+
+    pip install ringplus
+
+You can also install via::
+
+    pip install git+https://github.com/Shatnerz/ringplus.git
+
+If you plan on making changes. I would install on editable mode in pip via::
 
     git clone https://github.com/Shatnerz/ringplus.git
 
     cd ringplus
 
     pip install -e .
-
-You can also install via::
-
-    pip install git+https://github.com/Shatnerz/ringplus.git
 
 
 Notes
