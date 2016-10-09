@@ -3,14 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ringplus's documentation!
-====================================
+RingPlus Python Documentation
+=============================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   getting_started.rst
+   auth_tutorial.rst
+   api.rst
 
 
 Indices and tables

@@ -1,0 +1,2 @@
+sphinxcontrib-napoleon
+git+https://github.com/Shatnerz/ringplus.git

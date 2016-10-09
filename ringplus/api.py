@@ -102,7 +102,7 @@ class API(object):
                 Currently does not partial or full text search.
             email_address (optional): The email_address of the account to
                 filter by. Currently does not partial or full text search.
-            pphone_number (optional): The phone_number of the account to
+            phone_number (optional): The phone_number of the account to
                 filter by. Currently does not partial or full text search.
             ddevice_esn (optional): The active device_esn of the account to
                 filter by. Currently does not partial or full text search.
