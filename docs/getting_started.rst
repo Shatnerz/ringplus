@@ -11,6 +11,28 @@ The goal of this tutorial is to get you started with the python wrapper
 for the `RingPlus API`_.
 
 
+Installation
+============
+
+Using pip and pypi::
+
+    pip install ringplus
+
+You can also install via::
+
+    pip install git+https://github.com/Shatnerz/ringplus.git
+
+If you plan on making changes to the source, You can install with editable
+mode in pip via::
+
+    git clone https://github.com/Shatnerz/ringplus.git
+
+    cd ringplus
+
+    pip install -e .
+
+
+
 Checking Voicemail
 ==================
 

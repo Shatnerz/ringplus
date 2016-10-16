@@ -20,7 +20,7 @@ You can also install via::
 
     pip install git+https://github.com/Shatnerz/ringplus.git
 
-If you plan on making changes. I would install on editable mode in pip via::
+If you plan on making changes, I would install on editable mode in pip via::
 
     git clone https://github.com/Shatnerz/ringplus.git
 
